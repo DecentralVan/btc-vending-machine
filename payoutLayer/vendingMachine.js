@@ -4,6 +4,9 @@ const Kefir = require('kefir')
 const Promise = require('bluebird')
 const EventEmitter = require('events')
 
+const cardReaderStream = require('./rfidReader')
+
+
 const config = require('../config');
 const addressMap = {};
 config.forEach(product => {
@@ -74,8 +77,7 @@ module.exports = function vendingMachine(paymentStream, rateStream) {
         .filter(status => status.trigger)
         .onValue(log)
         .flatMapConcat(() => Kefir.sequentially(2000, [1, 0]))
-        .onValue(pinValue => exec(`echo "` + pinValue + `"> /sys/class/gpio/gpio17/value`));
-
+        .onValue(pinValue => exec(`echo "` + pinValue + `"> /sys/class/gpio/gpio17/value`))
 }
 
 // maps
