@@ -4,8 +4,7 @@ const Kefir = require('kefir')
 const Promise = require('bluebird')
 const EventEmitter = require('events')
 
-const cardReaderStream = require('./rfidReader')
-
+const paynTap = require('./paynTap')
 
 const config = require('../config');
 const addressMap = {};
@@ -20,7 +19,7 @@ const exec = require('child_process').exec
 
 module.exports = function vendingMachine(paymentStream, rateStream) {
 
-    const purchases = Kefir
+    const beerPurchases = Kefir
         .combine([paymentStream, rateStream], (payment, rate) => {
             console.log("Merging the stream.")
             payment['rate'] = rate;
@@ -28,7 +27,8 @@ module.exports = function vendingMachine(paymentStream, rateStream) {
         })
         .log('Allowed To Trigger')
         .map(normalizePayment)
-        .log('purchases')
+
+    const purchases = Kefir.merge([beerPurchases, paynTap])
 
     var heartbeat;
 
@@ -47,12 +47,11 @@ module.exports = function vendingMachine(paymentStream, rateStream) {
                 if (status.wait > 0) {
                     status.trigger = false
                     status.wait -= 1;
-                } else if (status.pending > 1) {
+                } else if (status.pending >= 1) {
                     status.trigger = true;
                     status.pending -= 1
                     status.wait = 12
                 } else {
-                    console.log('clearing heartbeat')
                     clearInterval(heartbeat)
                     heartbeat = false;
                 }
