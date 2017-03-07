@@ -9,7 +9,8 @@ let valid = [
     '0008011226\n'
 ]
 
-const paynTapStream = Kefir.stream(emitter => {
+module.exports = Kefir.stream(emitter => {
+    console.log("yo")
     function isMember(scannedFob) {
         return valid.some(memberId => memberId === scannedFob)
     }
@@ -19,9 +20,13 @@ const paynTapStream = Kefir.stream(emitter => {
         const scannedFob = process.stdin.read()
         if (isMember(scannedFob)) {
             console.log('emitting ', 1)
-            emitter.emit(1)
+            emitter.emit(
+		{
+			txid: "keg", 
+			recieved: 1,
+			address: "adamwashere"
+		}
+	    )
         }
     })
 })
-
-module.exports = paynTapStream
