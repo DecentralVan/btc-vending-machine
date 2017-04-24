@@ -17,10 +17,8 @@ process.stdin.on('readable', () => {
   if (scannedFob){
     scannedFob = scannedFob.slice(0, -1)
   }
+  checkWithBrain(scannedFob)
 
-  emit(1)
-  // make request to backend
-  // checkWithBrain()
 })
 
 function checkWithBrain(scannedFob) {
@@ -47,7 +45,7 @@ function checkWithBrain(scannedFob) {
               console.log('Invalid Fob')
               return null
           }
-          // TODO how to check success
+          // TODO check success better
           if (true) {
             console.log("triggering beer")
             emit(1)

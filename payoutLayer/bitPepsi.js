@@ -6,8 +6,7 @@ const paymentStream = require('../paymentLayer')
 module.exports = bitPepsi(paymentStream)
 
 function bitPepsi(paymentStream) {
-
-    var heartbeat;
+    var heartbeat
 
     const _beat = {}
     const heartStream = Kefir.stream(beat => {
@@ -52,6 +51,5 @@ function bitPepsi(paymentStream) {
     const outputStream = timingLayer
         .filter(status => status.trigger)
         .flatMapConcat(() => Kefir.sequentially(2000, [1, 0]))
-        .onValue(pinValue => exec(`echo "` + pinValue + `"> /sys/class/gpio/gpio17/value`));
-
+        .onValue(pinValue => exec(`echo "` + pinValue + `"> /sys/class/gpio/gpio17/value`))
 }
