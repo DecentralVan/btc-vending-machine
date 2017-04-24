@@ -1,12 +1,10 @@
 {
-  "name": "bbtm",
+  "name": "btc-vending-machine",
   "version": "1.0.0",
-  "description": "full node Beer Bitcoin Teller Machine",
-  "main": "server.coffee",
+  "description": "",
+  "main": "",
   "dependencies": {
-    "bcoin": "https://github.com/bcoin-org/bcoin#0ca843e3cabd4920546a9947f15954e2b7ede195",
     "bluebird": "^3.3.5",
-    "debug": "^2.2.0",
     "kefir": "^3.2.1",
     "superagent": "^1.8.3",
     "ws": "^1.1.0"

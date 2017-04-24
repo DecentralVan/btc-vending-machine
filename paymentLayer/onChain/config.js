@@ -17,4 +17,4 @@ module.exports = products = [
     price: 10000,
     gpioPin: 4
   }
-];
+]
