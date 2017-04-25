@@ -23,7 +23,7 @@ function bitPepsi(paymentStream) {
                 if (status.wait > 0) {
                     status.trigger = false
                     status.wait -= 1;
-                } else if (status.pending > 1) {
+                } else if (status.pending >= 1) {
                     status.trigger = true;
                     status.pending -= 1
                     status.wait = 12
