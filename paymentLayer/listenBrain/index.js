@@ -1,3 +1,4 @@
+const = require('./tap')
 const r = require('rethinkdb')
 const Kefir = require('kefir')
 const config = require('./config')
