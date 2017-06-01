@@ -1,4 +1,4 @@
-const = require('./tap')
+const tap = require('./tap')
 const r = require('rethinkdb')
 const Kefir = require('kefir')
 const config = require('./config')
