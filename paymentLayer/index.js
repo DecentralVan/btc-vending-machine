@@ -1,6 +1,6 @@
 const Kefir = require('kefir')
 
 const onChain = require('./onChain')
-const listenBrain = require('./listenBrain')
+const tapnPay = require('./tapnPay')
 
-module.exports = Kefir.merge([onChain, listenBrain]).log("paymentLayer")
+module.exports = Kefir.merge([onChain, tapnPay]).log("paymentLayer")

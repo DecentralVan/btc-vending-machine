@@ -47,7 +47,6 @@ function checkWithBrain(scannedFob) {
           }
           // TODO check success better
           if (true) {
-            console.log("triggering beer")
             emit(1)
           }
         })
