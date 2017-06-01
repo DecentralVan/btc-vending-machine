@@ -46,7 +46,7 @@ function bitPepsi(paymentStream) {
             wait: 0,
             pending: 0
         })
-        .log()
+        .log("payment")
 
     const outputStream = timingLayer
         .filter(status => status.trigger)

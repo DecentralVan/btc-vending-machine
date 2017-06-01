@@ -48,10 +48,9 @@ function checkWithBrain(scannedFob) {
         .end((err, res) => {
           if (err || res.body.error){
               console.log('Invalid Fob')
-	      console.log(err)
-	      console.log(res.body)
               return null
           }
+          emit(1)
         })
     })
 }
