@@ -24,7 +24,7 @@ r.connect({
         .changes()
         .run(conn, (err, cursor)=> {
             cursor.each((err, change)=>{
-                console.log({amount: change.new_val.amount})
+                console.log("database updated: ", {amount: change.new_val.amount})
                 if (!err && change.new_val.amount > 0){
                     emit(change.new_val.amount * 100 / PRICE_CENTS)
                 }
