@@ -11,6 +11,8 @@ const dbPaymentStream = Kefir.stream(emitter => {
 
 module.exports = dbPaymentStream.log('event') // subscribe to trigger above
 
+emit(2)
+
 r.connect({
   host:config.location,
   db: "eventstate"
@@ -24,6 +26,7 @@ r.connect({
         )
         .changes()
         .run(conn, (err, cursor)=> {
+            console.log({err, cursor})
             cursor.each((err, change)=>{
                 console.log("database updated: ", {amount: change.new_val.amount})
                 if (!err && change.new_val.amount > 0){
