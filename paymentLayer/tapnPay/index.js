@@ -1,5 +1,8 @@
 const request = require('superagent')
 const Kefir = require('kefir')
+const evdev = require('evdev');
+const reader = new evdev();
+const device = reader.open("/dev/input/by-id/usb-Sycreader_RFID_Technology_Co.__Ltd_SYC_ID_IC_USB_Reader_08FF20140315-event-kbd");
 
 const brainLocation = require('./config').brainLocation
 
@@ -10,47 +13,51 @@ const tapnPayStream = Kefir.stream(emitter => {
 
 module.exports = tapnPayStream.log('tapnPay') // subscribe to trigger above
 
-process.stdin.setEncoding('utf8')
-process.stdin.on('readable', () => {
+let fob = ""
 
-  let scannedFob = process.stdin.read()
-  if (scannedFob) {
-    scannedFob = scannedFob.slice(0, -1)
+function keyparse(code) {
+  var key = code.substr(4);
+  if (key == "ENTER") {
+    console.log(fob);
+    checkWithBrain(fob)
+    fob = ""
+  } else {
+    fob = fob + key;
   }
-  checkWithBrain(scannedFob)
+}
 
-})
+reader.on("EV_KEY",function(data){
+  if (data.value == 1)
+    keyparse(data.code)
+});
 
 function checkWithBrain(scannedFob) {
   request
     .get(brainLocation + 'members/' + scannedFob)
     .end((err, res) => {
-      if (err || res.body.error) {
-        console.log('Invalid Fob')
-        return null
+      if (err || res.body.error){
+          console.log('Invalid Fob')
+          return null
       }
-
+      console.log("address?" , res.body.address)
       let chargeRequest = {
-        action: {
-          type: "member-charged",
-          address: res.body.address,
-          amount: "3",
-          notes: "BitPepsi"
+	action: {
+        type: "member-charged",
+        address: res.body.address,
+        amount: "3",
+        notes: "BitPepsi"
         }
       }
-
+      console.log({chargeRequest})
       request
         .post(brainLocation + 'members')
         .send(chargeRequest)
         .end((err, res) => {
-          if (err || res.body.error) {
-            console.log('Invalid Fob')
-            return null
+          if (err || res.body.error){
+              console.log('Unable to create')
+              return null
           }
-          // TODO check success better
-          if (true) {
-            emit(1)
-          }
+          emit(1)
         })
     })
 }
