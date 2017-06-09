@@ -121,7 +121,7 @@ function bountyClaimProcess(scannedFob, isHandledCallback) {
   request
     .get(brainLocation + 'bounties/' + scannedFob)
     .end((err, res) => {
-        if (err || res.body.error || ( Object.keys(res.body).length === 0 ) {
+        if (err || res.body.error || ( Object.keys(res.body).length === 0 ) ) {
             console.log('Invalid Fob, bounties/:fob')
             return isHandledCallback(false)
         }
