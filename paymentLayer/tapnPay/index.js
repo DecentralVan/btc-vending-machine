@@ -53,20 +53,24 @@ function calculatePayout(monthValue, lastClaimed, now){
 //     })
 // })
 
-let claimRequest  = {
-  action: {
-    type: "bounty-claimed",
-  }
-}
 
-let payoutRequest = {
-  action: {
-    type: "member-paid",
-    "cash?": false,
+var claimRequest, payoutRequest, activeBounty
+function resetBountyClaim(){
+  claimRequest  = {
+    action: {
+      type: "bounty-claimed",
+    }
   }
+  payoutRequest = {
+    action: {
+      type: "member-paid",
+      "cash?": false,
+    }
+  }
+  activeBounty = false
 }
+resetBountyClaim()
 
-var activeBounty = false
 function bountyClaimProcess(scannedFob, isHandledCallback) {
   if (activeBounty) {
       // Have an active bounty so next tap is to claim bounty:
@@ -75,6 +79,8 @@ function bountyClaimProcess(scannedFob, isHandledCallback) {
           .end((err, res) => {
             if (err || res.body.error) {
               console.log('Invalid Fob')
+              // clear bounty if random fob tries to claim?
+              resetBountyClaim()
               return null
             }
 
@@ -101,12 +107,12 @@ function bountyClaimProcess(scannedFob, isHandledCallback) {
                 .end((err, res) => {
                     if (err || res.body.error) {
                       console.log('Unable to create')
-                      return null
                     }
                     console.log(res.body)
                 })
 
-
+            resetBountyClaim()
+            isHandledCallback(true)
 
           })
   }
