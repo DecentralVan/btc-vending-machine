@@ -20,14 +20,15 @@ function keyparse(code) {
   if (key == "ENTER") {
     console.log(fob);
     bountyClaimProcess(fob, isHandled => {
-      if (!isHandled) {
-        console.log("Trying to charge for beer")
-        checkWithBrain(fob)
-      }
-      fob = ""
+
+        console.log("Should Try to charge for beer", {isHandled})
+        if (!isHandled) {
+            checkWithBrain(fob)
+        }
+        fob = ""
     })
   } else {
-    fob = fob + key;
+      fob = fob + key;
   }
 }
 
@@ -120,22 +121,23 @@ function bountyClaimProcess(scannedFob, isHandledCallback) {
   request
     .get(brainLocation + 'bounties/' + scannedFob)
     .end((err, res) => {
-      if (err || res.body.error) {
-        console.log('Invalid Fob, bounties/:fob')
-        return isHandledCallback(false)
-      }
-      activeBounty = res.body
-      console.log("res to bounties/:fob", res.body)
-      let now = Date.now()
-      let monthValue = res.body.value
-      let lastClaimed = res.body.notes
-      let amount = calculatePayout(monthValue, lastClaimed, now)
-      // Build in the info we need from the bounty, next tap will send these requests
-      claimRequest.action["bounty-id"] = res.body["bounty-id"]
-      payoutRequest.action["notes"] = res.body["bounty-id"]
-      payoutRequest.action["amount"] = amount.toString()
-      // This was a bounty tag so we do not need to check for beer
-      isHandledCallback(true)
+        if (err || res.body.error || ( Object.keys(res.body).length === 0 ) {
+            console.log('Invalid Fob, bounties/:fob')
+            return isHandledCallback(false)
+        }
+
+        activeBounty = res.body
+        console.log("res to bounties/:fob", activeBounty)
+        let now = Date.now()
+        let monthValue = activeBounty.value
+        let lastClaimed = activeBounty.notes
+        let amount = calculatePayout(monthValue, lastClaimed, now)
+        // Build in the info we need from the bounty, next tap will send these requests
+        claimRequest.action["bounty-id"] = activeBounty["bounty-id"]
+        payoutRequest.action["notes"] = activeBounty["bounty-id"]
+        payoutRequest.action["amount"] = amount.toString()
+        // This was a bounty tag so we do not need to check for beer
+        isHandledCallback(true)
     })
 }
 
