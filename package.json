@@ -5,6 +5,7 @@
   "main": "",
   "dependencies": {
     "bluebird": "^3.3.5",
+    "evdev": "^0.2.3",
     "kefir": "^3.2.1",
     "rethinkdb": "^2.3.3",
     "superagent": "^1.8.3",
