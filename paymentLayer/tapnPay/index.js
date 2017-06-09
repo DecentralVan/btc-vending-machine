@@ -81,7 +81,7 @@ function bountyClaimProcess(scannedFob, isHandledCallback) {
               console.log('Invalid Fob')
               // clear bounty if random fob tries to claim?
               resetBountyClaim()
-              return null
+              return isHandledCallback(false)
             }
 
             payoutRequest.action["address"] = res.body.address
@@ -121,7 +121,7 @@ function bountyClaimProcess(scannedFob, isHandledCallback) {
     .get(brainLocation + 'bounties/' + scannedFob)
     .end((err, res) => {
       if (err || res.body.error) {
-        console.log('Invalid Fob')
+        console.log('Invalid Fob, bounties/:fob')
         return isHandledCallback(false)
       }
       activeBounty = res.body
