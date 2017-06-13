@@ -33,6 +33,10 @@ function bitPepsi(paymentStream) {
                 }
                 return status
             } else {
+                if (timingEvent > 1 && status.wait < 1){
+                    status.trigger = true
+                    status.pending -= 1
+                }
                 status.pending += timingEvent
                 if (!heartbeat) {
                     heartbeat = setInterval(_beat.emit, 1000, {
