@@ -33,9 +33,10 @@ function bitPepsi(paymentStream) {
                 }
                 return status
             } else {
-                if (timingEvent > 1 && status.wait < 1){
+                if (timingEvent >= 1 && status.wait < 1){
                     status.trigger = true
                     status.pending -= 1
+		    status.wait += 11
                 }
                 status.pending += timingEvent
                 if (!heartbeat) {
@@ -50,7 +51,6 @@ function bitPepsi(paymentStream) {
             wait: 0,
             pending: 0
         })
-        .log("payment")
 
     const outputStream = timingLayer
         .filter(status => status.trigger)
