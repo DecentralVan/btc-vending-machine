@@ -5,6 +5,7 @@ const reader = new evdev();
 const device = reader.open("/dev/input/by-id/usb-Sycreader_RFID_Technology_Co.__Ltd_SYC_ID_IC_USB_Reader_08FF20140315-event-kbd");
 
 const brainLocation = require('./config').brainLocation
+const bountiesSlack = require('./config').bountiesSlack
 
 let emit = null
 const tapnPayStream = Kefir.stream(emitter => {
@@ -111,6 +112,13 @@ function bountyClaimProcess(scannedFob, isHandledCallback) {
                     }
                     console.log(res.body)
                 })
+            request
+                .post(bountiesSlack)
+                .send({text: activeBounty.name + ' was claimed by ' + res.body.name+ ' for $'+ payoutRequest.action.amount})
+                .end( (err, res)=> {
+                    console.log({err,res})
+                })
+
 
             resetBountyClaim()
             isHandledCallback(true)
